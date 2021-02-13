@@ -48,13 +48,24 @@ class CategoryController extends Controller
         }
     }
 
-    public function deleteImg(Request $request)
+    public function getDeleteImg(Request $request)
     {
         $imgName = $request->imageName;
+        $this->deleteImg($imgName);
+    }
+
+    public function deleteImg($imgName)
+    {
         $filePath = public_path().'/'.$imgName;
         if(file_exists($filePath)) {
             @unlink($filePath);
         }
         return $imgName;
+    }
+
+    public function deleteCategory(Request $request)
+    {
+        $this->deleteImg($request->iconImg);
+        return Category::where('id', $request->id)->delete();
     }
 }

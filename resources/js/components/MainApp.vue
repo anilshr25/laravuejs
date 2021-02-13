@@ -22,6 +22,9 @@
                         <router-link class="nav-link active" to="/"><Icon type="ios-speedometer-outline" size="25" /><span>Dashboard</span></router-link>
                     </li>
                     <li class="nav-item">
+                        <router-link class="nav-link active" to=adminuser><Icon type="md-person-add" size="25" /><span>Admin Users</span></router-link>
+                    </li>
+                    <li class="nav-item">
                         <router-link class="nav-link active" to=tag><Icon type="ios-pricetags-outline" size="25" /><span>Tags</span></router-link>
                     </li>
                     <li class="nav-item">
@@ -251,9 +254,9 @@
                                     aria-labelledby="alertsDropdown"
                                 ></div>
                             </li>
-                            
+
                             <div class="d-none d-sm-block topbar-divider"></div>
-                            
+
                             <li class="nav-item dropdown no-arrow">
                                 <div class="nav-item dropdown no-arrow">
                                     <a

@@ -39,6 +39,9 @@
             changeCounter(){
                 this.$store.dispatch('changeByAction', 1) // calling action function
                 // this.$store.commit('counterPlus', 1)  // calling mutation function
+            },
+            runWhenCounterChange() {
+                console.log('i am running based on each changes happening');
             }
         },
 
@@ -46,6 +49,13 @@
             Acomp,
             Bcomp,
             Ccomp,
+        },
+        
+        watch: {
+            counter(value) {
+                console.log('Counter is changing', value);
+                this.runWhenCounterChange();
+            }
         }
     }
 </script>

@@ -1,9 +1,9 @@
 <template>
     <div class="container-fluid">
-                <h3 class="text-dark mb-4">Tags</h3>
+                <h3 class="text-dark mb-4">Admin Users</h3>
                 <div class="card shadow">
                     <div class="card-header py-3">
-                        <p class="text-primary m-0 font-weight-bold"><Button @click="addModal=true"><Icon type="md-add" size="20" />Add Tag</Button></p>
+                        <p class="text-primary m-0 font-weight-bold"><Button @click="addModal=true"><Icon type="md-add" size="20" />Add Admin Users</Button></p>
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -19,7 +19,7 @@
                                 <thead>
                                     <tr>
                                         <th>Id</th>
-                                        <th>Tag Name</th>
+                                        <th>Admin Name</th>
                                         <th>Created at</th>
                                         <th>Action</th>
                                     </tr>
@@ -33,7 +33,7 @@
                                             <Button type="info" @click="showEditData(tag, i)">Edit</Button>
                                             <Button type="error" @click="showDeleteData(tag, i)">Delete</Button>
                                         </td>
-                                    </tr>                                                                    
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -56,37 +56,25 @@
 
                         <!---   Add Tags Modal   -->
                         <Modal v-model="addModal" title="Add Tags" :mask-closable="false" :closable="false">
-                            <Input v-model="data.tagName" placeholder="Enter Tag Name" />
+                            <Input class="pb-3" type="text" v-model="data.tagName" placeholder="Enter Full Name" />
+                            <Input class="pb-3" type="email" v-model="data.tagName" placeholder="Enter Email " />
+                            <Input class="pb-3" type="password" v-model="data.tagName" placeholder="Enter Password" />
+                            <Input class="pb-3" type="password" v-model="data.tagName" placeholder="Enter Admin" />
                             <div slot="footer">
                                 <Button type="default" @click="addModal=false">Close</Button>
-                                <Button type="primary" @click="addTag" :disabled="isAdding" :loading="isAdding">{{ isAdding ? 'Adding...' : 'Add Tag' }}</Button>
+                                <Button type="primary" @click="addTag" :disabled="isAdding" :loading="isAdding">{{ isAdding ? 'Adding...' : 'Add Admin' }}</Button>
                             </div>
                         </Modal>
 
                         <!---   Edit Tags Modal   -->
                         <Modal v-model="editModal" title="Edit Tags" :mask-closable="false" :closable="false">
-                            <Input v-model="editData.tagName" placeholder="Edit Tag Name" />
+                            <Input v-model="editData.tagName" placeholder="Edit Admin Name" />
                             <div slot="footer">
                                 <Button type="default" @click="editModal=false">Close</Button>
-                                <Button type="primary" @click="editTag" :disabled="isEditing" :loading="isEditing">{{ isEditing ? 'Editing...' : 'Edit Tag' }}</Button>
+                                <Button type="primary" @click="editTag" :disabled="isEditing" :loading="isEditing">{{ isEditing ? 'Editing...' : 'Edit Admin' }}</Button>
                             </div>
                         </Modal>
 
-                        <!---   Delete Tags Modal  
-                        <Modal v-model="deleteModal" width="360" :mask-closable="false" :closable="false">
-                           <p slot="header" style="color:#f60;text-align:center">
-                                <Icon type="iso-information-circle"></Icon>
-                                <span>Delete Conformation</span>
-                           </p>
-                           <div style="text-align:center">
-                                <span>Are you sure you want to delete this tag?</span>
-                           </div>
-                            <div slot="footer">
-                                <Button type="default" @click="deleteModal=false">Close</Button>s
-                                <Button type="primary" @click="deleteTag()" :disabled="isDeleting" long :loading="isDeleting">{{ isDeleting ? 'Deleting...' : 'Delete Tag' }}</Button>
-                            </div>
-                        </Modal>  -->
-                        
                         <DeleteModal></DeleteModal>
 
                     </div>
@@ -99,7 +87,7 @@
 
     export default {
         components: {
-            DeleteModal 
+            DeleteModal
         },
         data() {
             return {
@@ -121,11 +109,11 @@
         },
         methods: {
             async addTag() {
-                if(this.data.tagName.trim() == '') return this.error('Tag Name is required!!')
+                if(this.data.tagName.trim() == '') return this.error('Admin Name is required!!')
                 const res = await this.callApi('post', '/tag/add', this.data);
                 if(res.status == 201) {
                     this.tags.unshift(res.data);
-                    this.success('Tag has been added sucessfully!');
+                    this.success('Admin has been added sucessfully!');
                     this.addModal = false;
                     this.data.tagName = '';
                 }else {
@@ -135,16 +123,16 @@
                         }
                     } else {
                         this.swrong();
-                    }                    
+                    }
                 }
             },
 
             async editTag() {
-                if(this.editData.tagName.trim() == '') return this.error('Tag Name is required!!')
+                if(this.editData.tagName.trim() == '') return this.error('Admin Name is required!!')
                 const res = await this.callApi('post', '/tag/edit', this.editData);
                 if(res.status == 200) {
                     this.tags[this.index].tagName = this.editData.tagName;
-                    this.success('Tag has been edited sucessfully!');
+                    this.success('Admin has been edited sucessfully!');
                     this.editModal = false;
                 }else {
                     if(res.status == 422){
@@ -153,7 +141,7 @@
                         }
                     } else {
                         this.swrong();
-                    }                    
+                    }
                 }
             },
 
@@ -169,14 +157,14 @@
 
             async deleteTag() {
                 // if(!confirm('Are you sure you want to delete this tag?')) return
-                // this.$set(tag, 'isDeleting', true);  // add new property which is doesn't before redenering 
+                // this.$set(tag, 'isDeleting', true);  // add new property which is doesn't before redenering
                 this.isDeleting = true;
                 const res = await this.callApi('post', '/tag/delete', this.deleteData);
                 if(res.status == 200) {
                     this.tags.splice(this.index, 1);
-                    this.success('Tag has been deleted sucessfully!');
+                    this.success('Admin has been deleted sucessfully!');
                 }else {
-                    this.swrong();             
+                    this.swrong();
                 }
                 this.isDeleting = false;
             },
@@ -192,7 +180,7 @@
                 this.$store.commit('setDeleteData', deleteModalObj);
             }
         },
-        
+
         async created() {
             const res = await this.callApi('get', '/tag/get');
             if(res.status == 200) {
@@ -212,7 +200,7 @@
                     this.tags.splice(obj.index,1);
                 }
             }
-            
+
         },
     }
 </script>

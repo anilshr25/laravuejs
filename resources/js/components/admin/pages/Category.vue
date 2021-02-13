@@ -101,7 +101,7 @@
                         </div>
                     </div>
                     <div slot="footer">
-                        <Button type="default" @click="addModal = false"
+                        <Button type="default" @click="closeddModal = false"
                             >Close</Button
                         >
                         <Button
@@ -178,7 +178,7 @@
                     </div>
                 </Modal>
 
-                <!---   Delete Categorys Modal   -->
+                <!---   Delete Categorys Modal
                 <Modal
                     v-model="deleteModal"
                     width="360"
@@ -207,200 +207,230 @@
                             }}</Button
                         >
                     </div>
-                </Modal>
+                </Modal> -->
+                <deleteModal></deleteModal>
             </div>
         </div>
     </div>
 </template>
 <script>
-export default {
-    data() {
-        return {
-            data: {
-                iconImg: "",
-                categoryName: ""
-            },
-            addModal: false,
-            editModal: false,
-            deleteModal: false,
-            isAdding: false,
-            isEditing: false,
-            isDeleting: false,
-            categories: [],
-            editData: {
-                iconImg: "",
-                categoryName: ""
-            },
-            deleteData: {},
-            index: -1,
-            token: "",
-            isIconImgNew: false,
-            isEditingIconImg: false
-        };
-    },
-    methods: {
-        async addCategory() {
-            if (this.data.categoryName.trim() == "")
-                return this.error("Category Name is required!!");
-            if (this.data.iconImg.trim() == "")
-                return this.error("Category Image is required!!");
-            const res = await this.callApi(
-                "post",
-                "/category/add_category",
-                this.data
-            );
-            if (res.status == 201) {
-                this.categories.unshift(res.data);
-                this.success("Category has been added sucessfully!");
-                this.addModal = false;
-                this.data.categoryName = "";
-                this.data.iconImg = "";
-                this.$refs.uploads.clearFiles();
-            } else {
-                if (res.status == 422) {
-                    if (res.data.errors.categoryName) {
-                        this.error(res.data.errors.categoryName[0]);
-                    }
-                } else {
-                    this.swrong();
-                }
-            }
-        },
+    import { mapGetters } from 'vuex';
+    import deleteModal from '../layout/DeleteModal';
 
-        async editCategory() {
-            if (this.editData.categoryName.trim() == "")
-                return this.error("Category Name is required!!");
-            if (this.editData.iconImg.trim() == "")
-                return this.error("Category Image is required!!");
-            const res = await this.callApi(
-                "post",
-                "/category/edit_category",
-                this.editData
-            );
-            if (res.status == 200) {
-                this.categories[
-                    this.index
-                ].categoryName = this.editData.categoryName;
-                this.success("Category has been edited sucessfully!");
+    export default {
+        data() {
+            return {
+                data: {
+                    iconImg: "",
+                    categoryName: ""
+                },
+                addModal: false,
+                editModal: false,
+                deleteModal: false,
+                isAdding: false,
+                isEditing: false,
+                isDeleting: false,
+                categories: [],
+                editData: {
+                    iconImg: "",
+                    categoryName: ""
+                },
+                deleteData: {},
+                index: -1,
+                token: "",
+                isIconImgNew: false,
+                isEditingIconImg: false
+            };
+        },
+        components: {
+            deleteModal
+        },
+        methods: {
+            async addCategory() {
+                if (this.data.categoryName.trim() == "")
+                    return this.error("Category Name is required!!");
+                if (this.data.iconImg.trim() == "")
+                    return this.error("Category Image is required!!");
+                const res = await this.callApi(
+                    "post",
+                    "/category/add",
+                    this.data
+                );
+                if (res.status == 201) {
+                    this.categories.unshift(res.data);
+                    this.success("Category has been added sucessfully!");
+                    this.addModal = false;
+                    this.data.categoryName = "";
+                    this.data.iconImg = "";
+                    this.$refs.uploads.clearFiles();
+                } else {
+                    if (res.status == 422) {
+                        if (res.data.errors.categoryName) {
+                            this.error(res.data.errors.categoryName[0]);
+                        }
+                    } else {
+                        this.swrong();
+                    }
+                }
+            },
+
+            async editCategory() {
+                if (this.editData.categoryName.trim() == "")
+                    return this.error("Category Name is required!!");
+                if (this.editData.iconImg.trim() == "")
+                    return this.error("Category Image is required!!");
+                const res = await this.callApi(
+                    "post",
+                    "/category/edit",
+                    this.editData
+                );
+                if (res.status == 200) {
+                    this.categories[
+                        this.index
+                    ].categoryName = this.editData.categoryName;
+                    this.success("Category has been edited sucessfully!");
+                    this.editModal = false;
+                } else {
+                    if (res.status == 422) {
+                        if (res.data.errors.categoryName) {
+                            this.error(res.data.errors.categoryName[0]);
+                        }
+                    } else {
+                        this.swrong();
+                    }
+                }
+            },
+
+            showEditData(category, index) {
+                this.editData = category;
+                this.editModal = true;
+                this.index = index;
+                this.isEditingIconImg = true;
+            },
+
+            closeEditModal() {
                 this.editModal = false;
-            } else {
-                if (res.status == 422) {
-                    if (res.data.errors.categoryName) {
-                        this.error(res.data.errors.categoryName[0]);
-                    }
-                } else {
-                    this.swrong();
+                this.isEditingIconImg = false;
+            },
+
+            // async deleteCategory() {
+            //     // if(!confirm('Are you sure you want to delete this category?')) return
+            //     // this.$set(category, 'isDeleting', true);  // add new property which is doesn't before redenering
+            //     // this.isDeleting = true;
+            //     // const res = await this.callApi(
+            //     //     "post",
+            //     //     "/category/delete",
+            //     //     this.deleteData
+            //     // );
+            //     // if (res.status == 200) {
+            //     //     this.categories.splice(this.index, 1);
+            //     //     this.success("Category has been deleted sucessfully!");
+            //     // } else {
+            //     //     this.swrong();
+            //     // }
+            //     // this.isDeleting = false;
+            //     // this.deleteModal = false;
+            // },
+
+            showDeleteData(category, index) {
+
+                const deleteModalObj = {
+                    deleteModal: true,
+                    isDeleting: false,
+                    deleteUrl: '/category/delete',
+                    deleteData: category,
+                    index: index,
+                    isDeleted: false
                 }
+                this.$store.commit('setDeleteData', deleteModalObj);
+
+                // this.deleteData = category;
+                // this.index = index;
+                // this.deleteModal = true;
+            },
+
+            async deleteImg(isAdding = true) {
+                let img = "";
+                if (!isAdding) {
+                    //for Editing
+                    img = this.editData.iconImg;
+                    this.editData.iconImg = "";
+                    this.isIconImgNew = true;
+                    this.$refs.editDataUpload.clearFiles();
+                } else {
+                    img = this.data.iconImg;
+                    this.data.iconImg = "";
+                    this.$refs.uploads.clearFiles();
+                }
+
+                if (img != null) {
+                    const res = await this.callApi("post", "/category/delete_img", {
+                        imageName: img
+                    });
+                    if (res.status != 200) {
+                        this.data.iconImg = image;
+                        this.swrong();
+                    }
+                }
+            },
+
+            handleSuccess(res) {
+                res = `/uploads/category/${res}`;
+                if (this.isEditingIconImg) {
+                    return (this.editData.iconImg = res);
+                }
+                this.data.iconImg = res;
+            },
+
+            handleError(file) {
+                this.$Notice.warning({
+                    title: "The file format is incorrect",
+                    desc: `${
+                        file.errors.file.length
+                            ? file.errors.file[0]
+                            : "Something Went Wrong! Please try again"
+                    }`
+                });
+            },
+
+            handleFormatError(file) {
+                this.$Notice.warning({
+                    title: "The file format is incorrect",
+                    desc:
+                        "File format of" +
+                        file.name +
+                        "is incorrect, Please Select jpg or png."
+                });
+            },
+
+            handleMaxSize(file) {
+                this.$Notice.warning({
+                    title: "Exceeding file size limit",
+                    desc: file.name + "is too large, File should less 1MB."
+                });
             }
         },
 
-        showEditData(category, index) {
-            this.editData = category;
-            this.editModal = true;
-            this.index = index;
-            this.isEditingIconImg = true;
-        },
-
-        closeEditModal() {
-            this.editModal = false;
-            this.isEditingIconImg = false;
-        },
-
-        async deleteCategory() {
-            // if(!confirm('Are you sure you want to delete this category?')) return
-            // this.$set(category, 'isDeleting', true);  // add new property which is doesn't before redenering
-            this.isDeleting = true;
-            const res = await this.callApi(
-                "post",
-                "/category/delete_category",
-                this.deleteData
-            );
+        async created() {
+            this.token = window.Laravel.csrfToken;
+            const res = await this.callApi("get", "/category/get");
             if (res.status == 200) {
-                this.categories.splice(this.index, 1);
-                this.success("Category has been deleted sucessfully!");
+                this.categories = res.data;
             } else {
                 this.swrong();
             }
-            this.isDeleting = false;
-            this.deleteModal = false;
+        },
+        computed: {
+            ...mapGetters(['getDeleteModelObj'])
         },
 
-        showDeleteData(category, index) {
-            this.deleteData = category;
-            this.index = index;
-            this.deleteModal = true;
-        },
-
-        async deleteImg(isAdding = true) {
-            let img = "";
-            if (!isAdding) {
-                //for Editing
-                img = this.editData.iconImg;
-                this.editData.iconImg = "";
-                this.isIconImgNew = true;
-                this.$refs.editDataUpload.clearFiles();
-            } else {
-                img = this.data.iconImg;
-                this.data.iconImg = "";
-                this.$refs.uploads.clearFiles();
-            }
-
-            if (img != null) {
-                const res = await this.callApi("post", "/category/delete_img", {
-                    imageName: img
-                });
-                if (res.status != 200) {
-                    this.data.iconImg = image;
-                    this.swrong();
+        watch: {
+            getDeleteModelObj(obj){
+                if(obj.isDeleted) {
+                    this.categories.splice(obj.index,1);
                 }
             }
+
         },
-
-        handleSuccess(res) {
-            res = `/uploads/category/${res}`;
-            if (this.isEditingIconImg) {
-                return (this.editData.iconImg = res);
-            }
-            this.data.iconImg = res;
-        },
-
-        handleError(file) {
-            this.$Notice.warning({
-                title: "The file format is incorrect",
-                desc: `${
-                    file.errors.file.length
-                        ? file.errors.file[0]
-                        : "Something Went Wrong! Please try again"
-                }`
-            });
-        },
-
-        handleFormatError(file) {
-            this.$Notice.warning({
-                title: "The file format is incorrect",
-                desc:
-                    "File format of" +
-                    file.name +
-                    "is incorrect, Please Select jpg or png."
-            });
-        },
-
-        handleMaxSize(file) {
-            this.$Notice.warning({
-                title: "Exceeding file size limit",
-                desc: file.name + "is too large, File should less 1MB."
-            });
-        }
-    },
-
-    async created() {
-        this.token = window.Laravel.csrfToken;
-        const res = await this.callApi("get", "/category/get_category");
-        if (res.status == 200) {
-            this.categories = res.data;
-        } else {
-            this.swrong();
-        }
-    }
-};
+    };
 </script>
