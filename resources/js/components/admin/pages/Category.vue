@@ -101,7 +101,7 @@
                         </div>
                     </div>
                     <div slot="footer">
-                        <Button type="default" @click="closeddModal = false"
+                        <Button type="default" @click="addModal=false"
                             >Close</Button
                         >
                         <Button
@@ -221,8 +221,8 @@
         data() {
             return {
                 data: {
-                    iconImg: "",
-                    categoryName: ""
+                    iconImg: '',
+                    categoryName: ''
                 },
                 addModal: false,
                 editModal: false,
@@ -232,12 +232,12 @@
                 isDeleting: false,
                 categories: [],
                 editData: {
-                    iconImg: "",
-                    categoryName: ""
+                    iconImg: '',
+                    categoryName: ''
                 },
                 deleteData: {},
                 index: -1,
-                token: "",
+                token: '',
                 isIconImgNew: false,
                 isEditingIconImg: false
             };
@@ -302,7 +302,12 @@
             },
 
             showEditData(category, index) {
-                this.editData = category;
+                let obj = {
+                    id: category.id,
+                    iconImg: category.iconImg,
+                    categoryName: category.categoryName
+                }
+                this.editData = obj;
                 this.editModal = true;
                 this.index = index;
                 this.isEditingIconImg = true;

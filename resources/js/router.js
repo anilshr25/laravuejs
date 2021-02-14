@@ -3,17 +3,17 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
+import login from './components/admin/pages/Login'
 import dashboard from './components/admin/pages/Dashboard'
-import adminuser from './components/admin/pages/Adminuser'
+import user from './components/admin/pages/Adminuser'
 import tag from './components/admin/pages/Tag'
 import category from './components/admin/pages/Category'
-import mainvuex from './components/vuex/VuexApp'
 
 const routes = [
     {
-        path: '/testvuex',
-        component: mainvuex,
-        name: 'mainvuex'
+        path: '/login',
+        component: login,
+        name: 'login',
     },
     {
         path: '/',
@@ -21,9 +21,9 @@ const routes = [
         name: 'dashboard'
     },
     {
-        path: '/adminuser',
-        component: adminuser,
-        name: 'adminuser'
+        path: '/user',
+        component: user,
+        name: 'user'
     },
     {
         path: '/tag',
@@ -35,6 +35,11 @@ const routes = [
         component: category,
         name: 'category'
     },
+    // {
+    //     path: '/testvuex',
+    //     component: mainvuex,
+    //     name: 'mainvuex'
+    // },
     // {
     //     path: '/test-page',
     //     component: TestPage

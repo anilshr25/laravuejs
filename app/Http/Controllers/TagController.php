@@ -23,7 +23,7 @@ class TagController extends Controller
         ]);
     }
 
-    public function updateTag(Request $request)
+    public function editTag(Request $request)
     {
         $this->validate($request, [
             'id' => 'required',

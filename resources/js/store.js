@@ -13,7 +13,8 @@ export default new Vuex.Store({
             deleteData: null,
             index: -1,
             isDeleted: false
-        }
+        },
+        user: false,
     },
     getters: {
         getCounter(state) {
@@ -21,10 +22,13 @@ export default new Vuex.Store({
         },
         getDeleteModelObj(state) {
             return state.deleteModalObj
-        }
+        },
+        // getLoggedIn(state,user) {
+        //     state.user = user
+        // }
 
     },
-    actions: {                                      //    this function are async  
+    actions: {                                      //    this function are async
         changeByAction({commit}, data) {
             commit('counterPlus', data)
         }
@@ -46,6 +50,10 @@ export default new Vuex.Store({
         },
         setDeleteData(state, data) {
             state.deleteModalObj = data
+        },
+
+        updateUser(state, data) {
+            state.user = data;
         }
     }
 })

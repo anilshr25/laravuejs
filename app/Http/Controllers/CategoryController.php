@@ -27,6 +27,7 @@ class CategoryController extends Controller
     public function editCategory(Request $request)
     {
         $this->validate($request, [
+            'id' => 'required',
             'categoryName' => 'required',
             'iconImg' => 'required'
         ]);

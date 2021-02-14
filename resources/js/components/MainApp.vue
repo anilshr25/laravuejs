@@ -1,5 +1,5 @@
 <template>
-    <div id="wrapper">
+    <div id="wrapper" v-if="$store.state.user">
         <!--  BEGIN SIDEBAR   -->
         <nav
             class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0"
@@ -292,7 +292,7 @@
                                             >&nbsp;Activity log</a
                                         >
                                         <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#"
+                                        <a class="dropdown-item" href="/logout"
                                             ><i
                                                 class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"
                                             ></i
@@ -322,4 +322,20 @@
         <a class="border rounded d-inline scroll-to-top" href="#page-top"
             ><Icon type="ios-arrow-up" size="25" /></a>
     </div>
+    <div id="wrapper" v-else>
+        <router-view></router-view>
+    </div>
 </template>
+<script>
+export default {
+    props: ['user'],
+    data() {
+        return {
+
+        };
+    },
+    created() {
+        this.$store.commit('updateUser', this.user)
+    }
+}
+</script>

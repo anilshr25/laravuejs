@@ -33,7 +33,7 @@
                                             <Button type="info" @click="showEditData(tag, i)">Edit</Button>
                                             <Button type="error" @click="showDeleteData(tag, i)">Delete</Button>
                                         </td>
-                                    </tr>                                                                    
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -72,7 +72,7 @@
                             </div>
                         </Modal>
 
-                        <!---   Delete Tags Modal  
+                        <!---   Delete Tags Modal
                         <Modal v-model="deleteModal" width="360" :mask-closable="false" :closable="false">
                            <p slot="header" style="color:#f60;text-align:center">
                                 <Icon type="iso-information-circle"></Icon>
@@ -86,7 +86,7 @@
                                 <Button type="primary" @click="deleteTag()" :disabled="isDeleting" long :loading="isDeleting">{{ isDeleting ? 'Deleting...' : 'Delete Tag' }}</Button>
                             </div>
                         </Modal>  -->
-                        
+
                         <DeleteModal></DeleteModal>
 
                     </div>
@@ -99,7 +99,7 @@
 
     export default {
         components: {
-            DeleteModal 
+            DeleteModal
         },
         data() {
             return {
@@ -135,7 +135,7 @@
                         }
                     } else {
                         this.swrong();
-                    }                    
+                    }
                 }
             },
 
@@ -153,7 +153,7 @@
                         }
                     } else {
                         this.swrong();
-                    }                    
+                    }
                 }
             },
 
@@ -167,19 +167,19 @@
                 this.index = index;
             },
 
-            async deleteTag() {
-                // if(!confirm('Are you sure you want to delete this tag?')) return
-                // this.$set(tag, 'isDeleting', true);  // add new property which is doesn't before redenering 
-                this.isDeleting = true;
-                const res = await this.callApi('post', '/tag/delete', this.deleteData);
-                if(res.status == 200) {
-                    this.tags.splice(this.index, 1);
-                    this.success('Tag has been deleted sucessfully!');
-                }else {
-                    this.swrong();             
-                }
-                this.isDeleting = false;
-            },
+            // async deleteTag() {
+            //     // if(!confirm('Are you sure you want to delete this tag?')) return
+            //     // this.$set(tag, 'isDeleting', true);  // add new property which is doesn't before redenering
+            //     this.isDeleting = true;
+            //     const res = await this.callApi('post', '/tag/delete', this.deleteData);
+            //     if(res.status == 200) {
+            //         this.tags.splice(this.index, 1);
+            //         this.success('Tag has been deleted sucessfully!');
+            //     }else {
+            //         this.swrong();
+            //     }
+            //     this.isDeleting = false;
+            // },
 
             showDeleteData(tag, index) {
                 const deleteModalObj = {
@@ -192,7 +192,7 @@
                 this.$store.commit('setDeleteData', deleteModalObj);
             }
         },
-        
+
         async created() {
             const res = await this.callApi('get', '/tag/get');
             if(res.status == 200) {
@@ -212,7 +212,7 @@
                     this.tags.splice(obj.index,1);
                 }
             }
-            
+
         },
     }
 </script>
