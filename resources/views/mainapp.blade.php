@@ -17,8 +17,12 @@
     </head>
     <body id="page-top">
        <div id="app">
-           @if (Auth::check() && Auth::user()->role->permission !=null)
-                <mainapp :user="{{ Auth::user() }}" :permission="{{ Auth::user()->role->permission }}"></mainapp>
+           @if (Auth::check())
+                @if (Auth::user()->role->permission !=null)
+                    <mainapp :user="{{ Auth::user() }}" :permission="{{ Auth::user()->role->permission }}"></mainapp>
+                @else
+                    <mainapp :user="{{ Auth::user() }}"></mainapp>
+                @endif
            @else
                 <mainapp :user="false"></mainapp>
            @endif
