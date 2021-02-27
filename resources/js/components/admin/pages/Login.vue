@@ -47,11 +47,11 @@ export default {
         async login() {
             if(this.data.email.trim() == '') return this.error('Email is required!!')
             if(this.data.password.trim() == '') return this.error('Password is required!!')
-            if(this.data.password.length < 6) return this.error('Password should at least 8 !!')
+            if(this.data.password.length < 6) return this.error('Password should at least 6 !!')
             const res = await this.callApi('post', '/user/login', this.data);
                 if(res.status == 200) {
                     this.isLogging = true;
-                    window.location = '/'
+                    window.location = '/dashboard'
                     this.success(res.data.msg);
                 }else {
                     if(res.status == 422){
@@ -60,9 +60,10 @@ export default {
                                 this.error(res.data.errors[i][0])
                             }
                         }
-                    } else if(res.status == 401){
+                    } else if(res.status == 401) {
                         this.error(res.data.msg);
-
+                    } else if(res.status == 403 ) {
+                        this.error(res.data.msg);
                     } else{
                         this.swrong();
                     }

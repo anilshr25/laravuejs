@@ -66,7 +66,7 @@
                                 <td>{{ user.id }}</td>
                                 <td>{{ user.fullname }}</td>
                                 <td>{{ user.email }}</td>
-                                <td>{{ user.userType }}</td>
+                                <td>{{ user.role_id }}</td>
                                 <td>{{ user.created_at }}</td>
                                 <td>
                                     <Button
@@ -155,13 +155,12 @@
                         v-model="data.password"
                         placeholder="Enter Password"
                     />
-                    <Select
+                    <Select v-if="roles.length"
                         class="pb-3"
-                        v-model="data.userType"
+                        v-model="data.role_id"
                         placeholder="Select a User Type"
                     >
-                        <Option value="Admin">Admin</Option>
-                        <Option value="Editor">Editor</Option>
+                        <Option v-for="(role,i) in roles" :key="i" :value="role.id">{{ role.roleName }}</Option>
                     </Select>
                     <div slot="footer">
                         <Button type="default" @click="addModal = false"
@@ -196,13 +195,12 @@
                         v-model="editData.email"
                         placeholder="Enter Email "
                     />
-                    <Select
+                    <Select v-if="roles.length"
                         class="pb-3"
-                        v-model="editData.userType"
-                        placeholder="Select a User Type"
+                        v-model="data.role_id"
+                        placeholder="Select a Role Type"
                     >
-                        <Option value="Admin">Admin</Option>
-                        <Option value="Editor">Editor</Option>
+                        <Option v-for="(role,i) in roles" :key="i" value="role.id">{{ role.roleName }}</Option>
                     </Select>
                     <div slot="footer">
                         <Button type="default" @click="editModal = false"
@@ -239,7 +237,7 @@ export default {
                 fullname: "",
                 email: "",
                 password: "",
-                userType: ""
+                role_id: ""
             },
             addModal: false,
             editModal: false,
@@ -247,11 +245,12 @@ export default {
             isEditing: false,
             isDeleting: false,
             users: [],
+            roles: [],
             editData: {
                 fullname: "",
                 email: "",
                 password: "",
-                userType: ""
+                role_id: ""
             },
             deleteData: {},
             index: -1
@@ -265,9 +264,9 @@ export default {
                 return this.error("Emailis required!!");
             if (this.data.password.trim() == "")
                 return this.error("Password is required!!");
-            if (this.data.userType.trim() == "")
-                return this.error("UserType is required!!");
-            const res = await this.callApi("post", "admin/user/add", this.data);
+            if (!this.data.role_id)
+                return this.error("Role is required!!");
+            const res = await this.callApi("post", "/user/add", this.data);
 
             if (res.status == 201) {
                 this.users.unshift(res.data);
@@ -276,7 +275,7 @@ export default {
                 this.data.fullname = "";
                 this.data.email = "";
                 this.data.password = "";
-                this.data.userType = "Admin";
+                this.data.role_id = "Admin";
             } else {
                 if (res.status == 422) {
                     for (let i in res.data.errors) {
@@ -293,8 +292,8 @@ export default {
                 return this.error("Admin Name is required!!");
             if (this.editData.email.trim() == "")
                 return this.error("Emailis required!!");
-            if (this.editData.userType.trim() == "")
-                return this.error("UserType is required!!");
+            if (!this.editData.role_id)
+                return this.error("Role is required!!");
             const res = await this.callApi("post", "/user/edit", this.editData);
             if (res.status == 200) {
                 this.users[this.index]= this.editData;
@@ -316,7 +315,7 @@ export default {
                 id: user.id,
                 fullname: user.fullname,
                 email: user.email,
-                userType: user.userType
+                role_id: user.role_id
             };
             this.editData = obj;
             this.editModal = true;
@@ -336,9 +335,17 @@ export default {
     },
 
     async created() {
-        const res = await this.callApi("get", "/user/get");
+        const [res, roles] = await Promise.all([
+            this.callApi("get", "/user/get"),
+            this.callApi("get", "/role/get")
+        ]);
         if (res.status == 200) {
             this.users = res.data;
+        } else {
+            this.swrong();
+        }
+        if (roles.status == 200) {
+            this.roles = roles.data;
         } else {
             this.swrong();
         }

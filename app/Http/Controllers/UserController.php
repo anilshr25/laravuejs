@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,36 +18,35 @@ class UserController extends Controller
 
         if(Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $user = Auth::user();
-            if($user->userType == 'User') {
+            if($user->role->roleName == "User") {
                 Auth::logout();
                 return response()->json([
-                    'msg' => 'Incorrect Email or Password Details'
+                    'msg' => 'Incorrect Email or Password Details!!'
                 ], 401);
             } else {
                 return response()->json([
                     'msg' => 'You are logged in',
-                    'user' => $user
                 ]);
             }
         } else {
             return response()->json([
-                'msg' => 'Incorrect Email or Password Details'
+                'msg' => 'Incorrect Email or Password Details!'
             ], 401);
         }
     }
 
     public function getUser()
     {
-        return User::where('userType', '!=', 'user')->orderBy('id', 'desc')->get();
+        return User::orderBy('id', 'desc')->get();
     }
 
-    public function addUser(Request $request)
+    public function addUser(UserRequest $request)
     {
         $this->validate($request, [
             'fullname' => 'required',
             'email' => 'bail|required|email|unique:users',
             'password' => 'bail|required|min:6',
-            'userType' => 'required',
+            'role_id' => 'required',
         ]);
 
         $password = bcrypt($request->password);
@@ -55,7 +55,7 @@ class UserController extends Controller
             'fullname' => $request->fullname,
             'email' => $request->email,
             'password' => $password,
-            'userType' => $request->userType,
+            'role_id' => $request->role_id,
         ]);
     }
 
@@ -65,12 +65,12 @@ class UserController extends Controller
             'id' => 'required',
             'fullname' => 'required',
             'email' => "bail|required|email|unique:users,email,$request->id",
-            'userType' => 'required',
+            'role_id' => 'required',
         ]);
         return User::where('id', $request->id)->update([
             'fullname' => $request->fullname,
             'email' => $request->email,
-            'userType' => $request->userType,
+            'role_id' => $request->role_id,
         ]);
     }
 

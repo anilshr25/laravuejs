@@ -8,6 +8,8 @@ import dashboard from './components/admin/pages/Dashboard'
 import user from './components/admin/pages/Adminuser'
 import tag from './components/admin/pages/Tag'
 import category from './components/admin/pages/Category'
+import role from './components/admin/pages/Role'
+import assign_role from './components/admin/pages/AssignRole'
 
 const routes = [
     {
@@ -16,14 +18,14 @@ const routes = [
         name: 'login',
     },
     {
-        path: '/',
+        path: '/dashboard',
         component: dashboard,
         name: 'dashboard'
     },
     {
-        path: '/user',
+        path: '/users',
         component: user,
-        name: 'user'
+        name: 'users'
     },
     {
         path: '/tag',
@@ -34,6 +36,16 @@ const routes = [
         path: '/category',
         component: category,
         name: 'category'
+    },
+    {
+        path: '/role',
+        component: role,
+        name: 'role'
+    },
+    {
+        path: '/assignRole',
+        component: assign_role,
+        name: 'assignRole'
     },
     // {
     //     path: '/testvuex',

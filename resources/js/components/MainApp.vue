@@ -19,10 +19,16 @@
                 <hr class="sidebar-divider my-0" />
                 <ul class="nav navbar-nav text-light" id="accordionSidebar">
                     <li class="nav-item">
-                        <router-link class="nav-link active" to="/"><Icon type="ios-speedometer-outline" size="25" /><span>Dashboard</span></router-link>
+                        <router-link class="nav-link active" to=dashboard><Icon type="ios-speedometer-outline" size="25" /><span>Dashboard</span></router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link class="nav-link active" to=adminuser><Icon type="md-person-add" size="25" /><span>Admin Users</span></router-link>
+                        <router-link class="nav-link active" to=users><Icon type="md-person-add" size="25" /><span>Admin Users</span></router-link>
+                    </li>
+                    <li class="nav-item">
+                        <router-link class="nav-link active" to=role><Icon type="ios-pricetags-outline" size="25" /><span>Role</span></router-link>
+                    </li>
+                    <li class="nav-item">
+                        <router-link class="nav-link active" to=assignRole><Icon type="ios-pricetags-outline" size="25" /><span>Assign Role</span></router-link>
                     </li>
                     <li class="nav-item">
                         <router-link class="nav-link active" to=tag><Icon type="ios-pricetags-outline" size="25" /><span>Tags</span></router-link>
