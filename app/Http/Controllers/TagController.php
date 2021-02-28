@@ -3,14 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tag;
+use App\Services\TagService;
 use Illuminate\Http\Request;
 
 class TagController extends Controller
 {
 
+    protected $tagService;
+
+    public function __construct(TagService $tagService) {
+        $this->tagService = $tagService;
+    }
+
     public function getTag()
     {
-        return Tag::orderBy('id', 'desc')->get();
+        return $this->tagService->getTag();
     }
 
     public function addTag(Request $request)
@@ -18,9 +25,7 @@ class TagController extends Controller
         $this->validate($request, [
             'tagName' => 'required'
         ]);
-        return Tag::create([
-            'tagName' => $request->tagName
-        ]);
+        return $this->tagService->store($request);
     }
 
     public function editTag(Request $request)
@@ -29,13 +34,11 @@ class TagController extends Controller
             'id' => 'required',
             'tagName' => 'required'
         ]);
-        return Tag::where('id', $request->id)->update([
-            'tagName' => $request->tagName
-        ]);
+        return $this->tagService->update($request);
     }
 
     public function deleteTag(Request $request)
     {
-        return Tag::where('id', $request->id)->delete();
+        return $this->tagService->delete($request);
     }
 }

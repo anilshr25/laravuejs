@@ -3,25 +3,29 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Services\CategoryService;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
+    protected $categoryService;
+
+    public function __construct(CategoryService $categoryService) {
+        $this->categoryService = $categoryService;
+    }
+
     public function getCategory()
     {
-        return Category::orderBy('id', 'desc')->get();
+        return $this->categoryService->getCategory();
     }
 
     public function addCategory(Request $request)
     {
         $this->validate($request, [
             'categoryName' => 'required',
-            'iconImg' => 'required'
+            'iconImg' => 'required',
         ]);
-        return Category::create([
-            'categoryName' => $request->categoryName,
-            'iconImg' => $request->iconImg
-        ]);
+        return $this->categoryService->store($request);
     }
 
     public function editCategory(Request $request)
@@ -29,44 +33,13 @@ class CategoryController extends Controller
         $this->validate($request, [
             'id' => 'required',
             'categoryName' => 'required',
-            'iconImg' => 'required'
+            'iconImg' => 'required',
         ]);
-        return Category::where('id', $request->id)->update([
-            'categoryName' => $request->categoryName,
-            'iconImg' => $request->iconImg
-        ]);
-    }
-
-    public function uploadImg(Request $request)
-    {
-        $this->validate($request, [
-            'file'=> 'required| mimes:jpg,jpeg,png'
-        ]);
-        if(file_exists($request->file)) {
-            $imgName = time(). '.'.$request->file->extension();
-            $request->file->move(public_path('uploads/category'), $imgName);
-            return $imgName;
-        }
-    }
-
-    public function getDeleteImg(Request $request)
-    {
-        $imgName = $request->imageName;
-        $this->deleteImg($imgName);
-    }
-
-    public function deleteImg($imgName)
-    {
-        $filePath = public_path().'/'.$imgName;
-        if(file_exists($filePath)) {
-            @unlink($filePath);
-        }
-        return $imgName;
+        return $this->categoryService->update($request);
     }
 
     public function deleteCategory(Request $request)
     {
-        $this->deleteImg($request->iconImg);
-        return Category::where('id', $request->id)->delete();
+        return $this->categoryService->delete($request);
     }
 }

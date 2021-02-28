@@ -71,7 +71,7 @@
                     <div class="pt-2">
                         <Upload
                             ref="uploads"
-                            action="/category/upload"
+                            action="/image/upload/category"
                             :headers="{
                                 'x-csrf-token': token,
                                 'X-Requested-With': 'XMLHttpRequest'
@@ -132,7 +132,7 @@
                         <Upload
                             v-show="isIconImgNew"
                             ref="editDataUpload"
-                            action="/category/upload"
+                            action="/image/upload"
                             :headers="{
                                 'x-csrf-token': token,
                                 'X-Requested-With': 'XMLHttpRequest'
@@ -363,17 +363,18 @@
                     this.isIconImgNew = true;
                     this.$refs.editDataUpload.clearFiles();
                 } else {
+                    console.log(img)
                     img = this.data.iconImg;
                     this.data.iconImg = "";
                     this.$refs.uploads.clearFiles();
                 }
 
                 if (img != null) {
-                    const res = await this.callApi("post", "/category/delete_img", {
+                    const res = await this.callApi("post", "/image/delete_img", {
                         imageName: img
                     });
                     if (res.status != 200) {
-                        this.data.iconImg = image;
+                        this.data.iconImg = img;
                         this.swrong();
                     }
                 }
