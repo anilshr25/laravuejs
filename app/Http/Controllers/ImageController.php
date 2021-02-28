@@ -23,9 +23,6 @@ class ImageController extends Controller
 
     public function deleteImg(Request $request)
     {
-        $this->validate($request, [
-            'file'=> 'required| mimes:jpg,jpeg,png'
-        ]);
         return $this->imageService->getDeleteImg($request);
     }
 }

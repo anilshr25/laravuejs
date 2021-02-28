@@ -112,6 +112,7 @@ export default {
             },
             isAssign: false,
             roles: [],
+            permissions: [],
             defaultResources: [
                 {
                     resourceName: "Users",
@@ -250,9 +251,10 @@ export default {
         if (res.status == 200) {
             if (res.data.length) {
                 this.roles = res.data;
-                this.data.id = res.data[2].id;
-                if (res.data[2].permission) {
-                    this.resources = JSON.parse(res.data[2].permission);
+                let index = this.roles.findIndex(role => role.id == 1);
+                this.data.id = res.data[index].id;
+                if (res.data[index].permission) {
+                    this.resources = JSON.parse(res.data[index].permission);
                 }
             }
         } else {

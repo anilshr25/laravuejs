@@ -2949,6 +2949,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       },
       isAssign: false,
       roles: [],
+      permissions: [],
       defaultResources: [{
         resourceName: "Users",
         read: false,
@@ -3109,7 +3110,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     var _this3 = this;
 
     return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
-      var res;
+      var res, index;
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
@@ -3123,10 +3124,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               if (res.status == 200) {
                 if (res.data.length) {
                   _this3.roles = res.data;
-                  _this3.data.id = res.data[2].id;
+                  index = _this3.roles.findIndex(function (role) {
+                    return role.id == 1;
+                  });
+                  _this3.data.id = res.data[index].id;
 
-                  if (res.data[2].permission) {
-                    _this3.resources = JSON.parse(res.data[2].permission);
+                  if (res.data[index].permission) {
+                    _this3.resources = JSON.parse(res.data[index].permission);
                   }
                 }
               } else {
