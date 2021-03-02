@@ -3947,7 +3947,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 res = _context.sent;
 
                 if (res.status == 200) {
-                  _this.isLogging = true;
                   window.location = '/dashboard';
 
                   _this.success(res.data.msg);

@@ -50,7 +50,6 @@ export default {
             if(this.data.password.length < 6) return this.error('Password should at least 6 !!')
             const res = await this.callApi('post', '/user/login', this.data);
                 if(res.status == 200) {
-                    this.isLogging = true;
                     window.location = '/dashboard'
                     this.success(res.data.msg);
                 }else {
