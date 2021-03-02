@@ -9,31 +9,6 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    public function login(Request $request)
-    {
-        $this->validate($request, [
-            'email' => 'bail|required|email',
-            'password' => 'bail|required|min:6',
-        ]);
-
-        if(Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-            $user = Auth::user();
-            if($user->role->roleName == "User") {
-                Auth::logout();
-                return response()->json([
-                    'msg' => 'Incorrect Email or Password Details!!'
-                ], 401);
-            } else {
-                return response()->json([
-                    'msg' => 'You are logged in',
-                ]);
-            }
-        } else {
-            return response()->json([
-                'msg' => 'Incorrect Email or Password Details!'
-            ], 401);
-        }
-    }
 
     public function getUser()
     {
